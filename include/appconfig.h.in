@@ -1,0 +1,3 @@
+#define APP_VERSION_MAJOR @example-project_VERSION_MAJOR@
+#define APP_VERSION_MINOR @example-project_VERSION_MINOR@
+#define APP_VERSION_PATCH @example-project_VERSION_PATCH@
