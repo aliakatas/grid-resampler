@@ -1,9 +1,13 @@
-# Template CXX
-Template CXX project configuration with CMake for a cross-platform application.
+# Resample grids
+Given a 2D grid of values in a standard 2D array or XYZ format, generate a new grid of a different resolution to the original.
 
-## Dependencies
-Relies on the [Boost C++](https://www.boost.org/) library.
+# Dependencies
+The project depends on the following libraries:
+- [Boost C++](https://www.boost.org/): TODO - instructions to install and build 
+- [GDAL](https://gdal.org/index.html): TODO - instructions to install and build 
 
+
+<!--
 To build using cmake, it needs the following entries set:
 - BOOST_DIR CACHE PATH "Boost installation directory path".
   Example:
@@ -17,3 +21,4 @@ To build using cmake, it needs the following entries set:
   ```
 
 The particular Boost library used in this template is [Program Options](https://www.boost.org/doc/libs/1_84_0/doc/html/program_options.html).
+-->
