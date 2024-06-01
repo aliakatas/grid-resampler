@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/grid-resampler",
-            "args": [],
+            "args": ["--compression-level", "5", "-I", "../data/nc22_OST50GRID_20230518/NC22.asc"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
