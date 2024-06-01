@@ -1,22 +1,12 @@
 #include "preambler.h"
-// #include "appconfig.h"
-// #include "appmanager.h"
-// #include "build_version_utils.h"
 
-// #include "boost/program_options/options_description.hpp"
-// #include "boost/program_options/variables_map.hpp"
-// #include "boost/program_options/parsers.hpp"
-// #include "boost/program_options/positional_options.hpp"
+#include "boost/log/core.hpp"
+#include "boost/log/trivial.hpp"
+#include "boost/log/sources/severity_logger.hpp"
 
-#include <iostream> 
-// #include <filesystem>
-// #include <chrono>
-// #include <ctime>
-// #include <stdexcept>
-// #include <string>
-// #include <vector>
+#include <iostream>
 
-// namespace bpo = boost::program_options;
+namespace logging = boost::log;
 
 int main(int argc, char** argv)
 {
@@ -49,27 +39,12 @@ int main(int argc, char** argv)
     }
     
     // Before proceeding with messages, sort out any logs 
+    preamble.initialise_logging();
+    boost::log::sources::severity_logger<logging::trivial::severity_level> lg;
+    
     const preamble::AppOptions* app_config = preamble.get_options();
+    BOOST_LOG_SEV(lg, logging::trivial::info) << app_config->summarise();
 
-
-    std::cout << app_config->summarise() << std::endl;
-
-
-
-    
-    // //----------------------------------------
-    // // Declare the supported options for the command line
-    // bpo::variables_map vm;
-    // std::string cli_input_options_desc;
-    // if (define_and_gather_cli_options(argc, argv, vm, cli_input_options_desc))
-    //     return EXIT_SUCCESS;        // just printed help/version and that's all
-    
-    // // otherwise, produce the banner
-    // std::cout << banner_message << std::endl;
-
-    // // also give a description of what was passed 
-    // // as input by the user (cli)
-    // std::cout << cli_input_options_desc << std::endl;
 
     //----------------------------------------
     // Start work...

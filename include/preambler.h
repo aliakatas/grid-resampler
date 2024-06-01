@@ -57,6 +57,8 @@ namespace preamble
 
         const AppOptions* get_options() const;
 
+        void initialise_logging() const;
+
     private:
         std::string m_banner_message;
         std::string m_version;

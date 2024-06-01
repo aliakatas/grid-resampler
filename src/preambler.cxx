@@ -8,12 +8,26 @@
 #include "boost/program_options/parsers.hpp"
 #include "boost/program_options/positional_options.hpp"
 
+#include "boost/log/core.hpp"
+#include "boost/log/trivial.hpp"
+#include "boost/log/expressions.hpp"
+#include "boost/log/sinks/text_file_backend.hpp"
+#include "boost/log/utility/setup/file.hpp"
+#include "boost/log/utility/setup/common_attributes.hpp"
+#include "boost/log/sources/severity_logger.hpp"
+#include "boost/log/utility/setup/console.hpp"
+
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
 
 namespace preamble
 {
+    namespace logging = boost::log;
+    namespace src = boost::log::sources;
+    namespace sinks = boost::log::sinks;
+    namespace keywords = boost::log::keywords;
+
     //####################################################
     void normalise_path(const std::filesystem::path& cwd, std::filesystem::path& path)
     {
@@ -164,6 +178,35 @@ namespace preamble
     const AppOptions* Preambler::get_options() const
     {
         return &m_app_options;
+    }
+
+    //####################################################
+    void Preambler::initialise_logging() const
+    {
+        logging::add_console_log(
+            std::cout,
+            keywords::format = "[%Severity%]: %Message%"
+        );
+        logging::core::get()->set_filter
+        (
+            logging::trivial::severity >= logging::trivial::info
+        );
+
+        if (m_app_options.log_file.string().length() > 0)
+        {
+            logging::add_file_log
+            (
+                keywords::file_name = m_app_options.log_file.string().c_str(),
+                keywords::format = "[%TimeStamp%][%Severity%]: %Message%"
+            );
+
+            logging::core::get()->set_filter
+            (
+                logging::trivial::severity >= logging::trivial::info
+            );
+        }
+
+        logging::add_common_attributes();
     }
 
     //####################################################
