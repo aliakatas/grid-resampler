@@ -10,6 +10,8 @@ public:
     ~AppManager();
 
     int run() noexcept(false);
+
+    void clean_up();
 private:
 
 };

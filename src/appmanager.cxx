@@ -6,12 +6,12 @@
 
 AppManager::AppManager()
 {
-    std::cout << __FUNCTION__ << " created " << std::endl;
+    std::cout << __PRETTY_FUNCTION__ << " created " << std::endl;
 }
 
 AppManager::~AppManager()
 {
-    std::cout << __FUNCTION__ << " is being destroyed " << std::endl;
+    clean_up();
 }
 
 int AppManager::run() noexcept(false)
@@ -30,4 +30,9 @@ int AppManager::run() noexcept(false)
         return 1;
 
     return 0;
+}
+
+void AppManager::clean_up()
+{
+    std::cout << __PRETTY_FUNCTION__ << " is being destroyed " << std::endl;
 }
