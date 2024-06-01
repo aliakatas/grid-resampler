@@ -46,7 +46,7 @@ namespace preamble
         {
             if (!std::filesystem::create_directories(output_parent))
             {
-                std::string t = std::string(__FUNCTION__) +
+                std::string t = std::string(__PRETTY_FUNCTION__) +
                     std::string(": Failed to create directory(-ies): ") + output_parent.string();
                 throw std::runtime_error(t.c_str());
             }
@@ -60,7 +60,7 @@ namespace preamble
 
         if (input_file.string().length() == 0)
         {
-            std::string t = std::string(__FUNCTION__) + std::string(": Input file is missing");
+            std::string t = std::string(__PRETTY_FUNCTION__) + std::string(": Input file is missing");
             throw std::runtime_error(t.c_str());
         }
 
@@ -82,7 +82,7 @@ namespace preamble
         
         if (!std::filesystem::exists(input_file))
         {
-            std::string t = std::string(__FUNCTION__) + 
+            std::string t = std::string(__PRETTY_FUNCTION__) + 
                 std::string(": ") + input_file.string() + std::string(" does not exist");
             throw std::runtime_error(t.c_str());
         }
