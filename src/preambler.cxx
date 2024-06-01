@@ -10,20 +10,121 @@
 
 #include <filesystem>
 #include <sstream>
+#include <stdexcept>
 
 namespace preamble
 {
     //####################################################
-    Preambler::Preambler(int argc, char** argv)
+    void normalise_path(const std::filesystem::path& cwd, std::filesystem::path& path)
     {
-        _create_banner_message(argc, argv);
-        _sort_out_app_cli_options(argc, argv);
+        if (path.is_relative())
+        {
+            path = (cwd / path).lexically_normal();
+        }
+    }
+
+    //####################################################
+    void create_file_parent_directories(const std::filesystem::path& file_path) noexcept(false)
+    {
+        std::filesystem::path output_parent = file_path.parent_path();
+
+        if (!std::filesystem::exists(output_parent))
+        {
+            if (!std::filesystem::create_directories(output_parent))
+            {
+                std::string t = std::string(__FUNCTION__) +
+                    std::string(": Failed to create directory(-ies): ") + output_parent.string();
+                throw std::runtime_error(t.c_str());
+            }
+        }
+    }
+
+    //####################################################
+    void AppOptions::process_paths() noexcept(false)
+    {
+        std::filesystem::path cwd = std::filesystem::current_path();
+
+        if (input_file.string().length() == 0)
+        {
+            std::string t = std::string(__FUNCTION__) + std::string(": Input file is missing");
+            throw std::runtime_error(t.c_str());
+        }
+
+        if (output_file.string().length() == 0)
+        {
+            output_file = input_file.parent_path();
+            std::string new_name = input_file.stem().string() + std::string("_resampled");
+            output_file = output_file / std::filesystem::path(new_name);
+            output_file.replace_extension(".tif");
+        }
+
+        normalise_path(cwd, input_file);
+        normalise_path(cwd, output_file);
+
+        if (log_file.string().length() > 0)
+        {
+            normalise_path(cwd, log_file);
+        }
+        
+        if (!std::filesystem::exists(input_file))
+        {
+            std::string t = std::string(__FUNCTION__) + 
+                std::string(": ") + input_file.string() + std::string(" does not exist");
+            throw std::runtime_error(t.c_str());
+        }
+
+        create_file_parent_directories(output_file);
+
+        if (log_file.string().length() > 0)
+        {
+            create_file_parent_directories(log_file);
+        }
+    }
+
+    //####################################################
+    std::string AppOptions::summarise() const
+    {
+        std::string temp = "App Options summary: \n";
+        temp += "   Input file:   " + input_file.string() + "\n";
+        temp += "   Output file:  " + output_file.string() + "\n";
+        temp += "   Log file:     ";
+        if (log_file.string().length() > 0)
+        {
+            temp += log_file.string() + "\n";
+        }
+        else 
+        {
+            temp += "stdout \n";
+        }
+        temp += "   Compression:  " + compression_method + " (" + std::to_string(compression_level) + ")\n";
+        temp += "   Output scale: " + std::to_string(resolution_scale) + "\n";
+
+        return temp;
+    }
+
+    //####################################################
+    Preambler::Preambler()
+    {
+
+    }
+
+    //####################################################
+    Preambler::Preambler(int argc, char** argv) noexcept(false)
+    {
+        prepare(argc, argv);
     }
 
     //####################################################
     Preambler::~Preambler()
     {
 
+    }
+
+    //####################################################
+    void Preambler::prepare(int argc, char** argv) noexcept(false)
+    {
+        _create_banner_message(argc, argv);
+        _sort_out_app_cli_options(argc, argv);
     }
 
     //####################################################
@@ -60,6 +161,12 @@ namespace preamble
     }
 
     //####################################################
+    const AppOptions* Preambler::get_options() const
+    {
+        return &m_app_options;
+    }
+
+    //####################################################
     void Preambler::_create_banner_message(int argc, char** argv)
     {
         std::string start_time = get_time_now();
@@ -89,7 +196,7 @@ namespace preamble
     }
 
     //####################################################
-    void Preambler::_sort_out_app_cli_options(int argc, char** argv)
+    void Preambler::_sort_out_app_cli_options(int argc, char** argv) noexcept(false)
     {
         std::string input_file;
         std::string output_file;
@@ -117,5 +224,7 @@ namespace preamble
 
         m_app_options.input_file = std::filesystem::path(input_file);
         m_app_options.output_file = std::filesystem::path(output_file);
+
+        m_app_options.process_paths();
     }
 }

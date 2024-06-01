@@ -8,7 +8,7 @@
 // #include "boost/program_options/parsers.hpp"
 // #include "boost/program_options/positional_options.hpp"
 
-#include <iostream>
+#include <iostream> 
 // #include <filesystem>
 // #include <chrono>
 // #include <ctime>
@@ -20,8 +20,22 @@
 
 int main(int argc, char** argv)
 {
-    preamble::Preambler preamble(argc, argv);
+    preamble::Preambler preamble;
 
+    try
+    {
+        preamble.prepare(argc, argv);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+
+        std::cout << preamble.get_version() << std::endl;
+        std::cout << preamble.get_help() << std::endl;
+
+        return EXIT_FAILURE;
+    }
+    
     if (preamble.only_help())
     {
         std::cout << preamble.get_help() << std::endl;
@@ -35,10 +49,14 @@ int main(int argc, char** argv)
     }
     
     // Before proceeding with messages, sort out any logs 
-    
+    const preamble::AppOptions* app_config = preamble.get_options();
 
-    std::cout << preamble.get_version() << std::endl;
-    std::cout << preamble.get_banner_message() << std::endl;
+
+    std::cout << app_config->summarise() << std::endl;
+
+
+
+    
     // //----------------------------------------
     // // Declare the supported options for the command line
     // bpo::variables_map vm;

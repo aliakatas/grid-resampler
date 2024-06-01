@@ -16,6 +16,12 @@ namespace preamble
     namespace bpo = boost::program_options;
 
     //+++++++++++++++++++++++++++++++++++++++++
+    void normalise_path(const std::filesystem::path& cwd, std::filesystem::path& path);
+
+    //+++++++++++++++++++++++++++++++++++++++++
+    void create_file_parent_directories(const std::filesystem::path& file_path) noexcept(false);
+
+    //+++++++++++++++++++++++++++++++++++++++++
     struct AppOptions
     {
         std::string compression_method = RASTER_NO_COMPRESSION;
@@ -23,15 +29,24 @@ namespace preamble
         double resolution_scale = 1.;
         std::filesystem::path input_file;
         std::filesystem::path output_file;
+        std::filesystem::path log_file;
+
+        void process_paths() noexcept(false);
+
+        std::string summarise() const;
     };
 
     //+++++++++++++++++++++++++++++++++++++++++
     class Preambler
     {
     public:
-        Preambler(int argc, char** argv);
+        Preambler();
+
+        Preambler(int argc, char** argv) noexcept(false);
 
         ~Preambler();
+
+        void prepare(int argc, char** argv) noexcept(false);
 
         bool only_help() const;
         std::string get_help() const;
@@ -39,6 +54,8 @@ namespace preamble
         bool only_version() const;
         std::string get_version() const;
         std::string get_banner_message() const;
+
+        const AppOptions* get_options() const;
 
     private:
         std::string m_banner_message;
@@ -53,7 +70,7 @@ namespace preamble
 
         void _create_banner_message(int argc, char** argv);
 
-        void _sort_out_app_cli_options(int argc, char** argv);
+        void _sort_out_app_cli_options(int argc, char** argv) noexcept(false);
     };
 }
 
