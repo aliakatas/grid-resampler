@@ -16,9 +16,14 @@ file(GLOB SOURCE_FILES "${SOURCE_DIR}/*.cxx")
 configure_file("${INCLUDE_DIR}/appconfig.h.in" "${PROJECT_BINARY_DIR}/include/appconfig.h")
 
 set(BOOST_DIR CACHE PATH "Boost installation directory path")
-set(BOOST_PRG_OPTS_LIB CACHE FILEPATH "Boost::program_options static lib filepath")
+set(BOOST_LIBS CACHE PATH "Boost libraries path")
+
+add_definitions(-DBOOST_LOG_DYN_LINK)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_BINARY_DIR}/include" "${CMAKE_CURRENT_SOURCE_DIR}/include" ${BOOST_DIR})
-target_link_libraries(${PROJECT_NAME} "${BOOST_PRG_OPTS_LIB}")
+target_link_directories(${PROJECT_NAME} PUBLIC "${BOOST_LIBS}")
+
+target_link_libraries(${PROJECT_NAME} boost_log boost_log_setup boost_thread boost_program_options)
+# remember to add ```export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/boost/dyn-libs>``` to .bashrc
