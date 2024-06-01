@@ -1,3 +1,3 @@
-#define APP_VERSION_MAJOR @example-project_VERSION_MAJOR@
-#define APP_VERSION_MINOR @example-project_VERSION_MINOR@
-#define APP_VERSION_PATCH @example-project_VERSION_PATCH@
+#define APP_VERSION_MAJOR @grid-resampler_VERSION_MAJOR@
+#define APP_VERSION_MINOR @grid-resampler_VERSION_MINOR@
+#define APP_VERSION_PATCH @grid-resampler_VERSION_PATCH@
