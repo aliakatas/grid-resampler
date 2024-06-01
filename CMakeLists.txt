@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 
 # https://cmake.org/cmake/help/latest/command/project.html
-project(example-project VERSION 0.1.0 
-    DESCRIPTION "Example project to use as template"
+project(grid-resampler VERSION 0.1.0 
+    DESCRIPTION "Create grids of different resolution to the original"
     LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -18,7 +18,7 @@ configure_file("${INCLUDE_DIR}/appconfig.h.in" "${PROJECT_BINARY_DIR}/include/ap
 set(BOOST_DIR CACHE PATH "Boost installation directory path")
 set(BOOST_PRG_OPTS_LIB CACHE FILEPATH "Boost::program_options static lib filepath")
 
-add_executable(example-project ${SOURCE_FILES})
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-target_include_directories(example-project PUBLIC "${PROJECT_BINARY_DIR}/include" "${CMAKE_CURRENT_SOURCE_DIR}/include" ${BOOST_DIR})
-target_link_libraries(example-project "${BOOST_PRG_OPTS_LIB}")
+target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_BINARY_DIR}/include" "${CMAKE_CURRENT_SOURCE_DIR}/include" ${BOOST_DIR})
+target_link_libraries(${PROJECT_NAME} "${BOOST_PRG_OPTS_LIB}")
